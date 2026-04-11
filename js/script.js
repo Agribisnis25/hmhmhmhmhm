@@ -53,18 +53,17 @@ if (contactForm) {
 const FORMSPREE_ENDPOINT = '';
 
 contactForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-
     // Get form values
     const nama = document.getElementById('nama').value.trim();
     const email = document.getElementById('email').value.trim();
-    const notelp = document.getElementById('notelp').value.trim();
-    const subjek = document.getElementById('subjek').value;
+    const telepon = document.getElementById('telepon').value.trim();
+    const kategori = document.getElementById('kategori').value;
     const pesan = document.getElementById('pesan').value.trim();
 
     // Validation
-    if (!nama || !email || !notelp || !subjek || !pesan) {
+    if (!nama || !email || !telepon || !pesan) {
         showFormMessage('Mohon isi semua kolom yang diperlukan!', 'error');
+        e.preventDefault();
         return;
     }
 
@@ -72,71 +71,31 @@ contactForm.addEventListener('submit', (e) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
         showFormMessage('Format email tidak valid!', 'error');
+        e.preventDefault();
         return;
     }
 
-    // Phone validation
+    // Phone validation (Indonesia format)
     const phoneRegex = /^(\+62|0)[0-9]{9,12}$/;
-    if (!phoneRegex.test(notelp)) {
-        showFormMessage('Format nomor telepon tidak valid!', 'error');
+    if (!phoneRegex.test(telepon)) {
+        showFormMessage('Format nomor telepon tidak valid! Gunakan format: +62812... atau 0812...', 'error');
+        e.preventDefault();
         return;
     }
 
-    // Prepare UI
+    // Show loading state
     const btn = contactForm.querySelector('button[type="submit"]');
     const originalText = btn.textContent;
     btn.textContent = 'Mengirim...';
     btn.disabled = true;
 
-    if (FORMSPREE_ENDPOINT) {
-        const formData = new FormData();
-        formData.append('nama', nama);
-        formData.append('email', email);
-        formData.append('notelp', notelp);
-        formData.append('subjek', subjek);
-        formData.append('pesan', pesan);
+    showFormMessage('Mengirim pesan... Formulir akan dibuka di tab baru.', 'success');
 
-        fetch(FORMSPREE_ENDPOINT, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json'
-            },
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.ok === false || data.error) {
-                throw new Error(data.error || 'Gagal mengirim pesan');
-            }
-            showFormMessage('Pesan Anda telah berhasil dikirim! Terima kasih.', 'success');
-            contactForm.reset();
-        })
-        .catch(err => {
-            console.error('Form submission error:', err);
-            showFormMessage('Terjadi kesalahan saat mengirim. Silakan coba lagi nanti.', 'error');
-        })
-        .finally(() => {
-            btn.textContent = originalText;
-            btn.disabled = false;
-        });
-    } else {
-        // Fallback: simulasi pengiriman (untuk development tanpa server)
-        setTimeout(() => {
-            console.log({
-                nama,
-                email,
-                notelp,
-                subjek,
-                pesan,
-                tanggal: new Date().toLocaleString('id-ID')
-            });
-
-            showFormMessage('Pesan Anda telah berhasil dikirim! (simulasi)', 'success');
-            contactForm.reset();
-            btn.textContent = originalText;
-            btn.disabled = false;
-        }, 800);
-    }
+    // Re-enable button after a short delay (in case validation fails and form doesn't submit)
+    setTimeout(() => {
+        btn.textContent = originalText;
+        btn.disabled = false;
+    }, 3000);
 });
 } // end if(contactForm)
 

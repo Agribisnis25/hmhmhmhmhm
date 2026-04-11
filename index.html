@@ -303,11 +303,35 @@
 
                 <div class="kontak-form">
                     <h3>Formulir Pertanyaan</h3>
-                    <div style="margin-top:6px;">
-                        <p>Silakan isi formulir resmi kami melalui Google Form di bawah ini.</p>
-                        <p><a href="https://docs.google.com/forms/d/e/1FAIpQLSfWnTVDWmNnKZI3T8tiqktfyQyDFHyQc2knFzyu2WybM0es3A/viewform?usp=pp_url&entry.1957495963=.&entry.621031545=.&entry.802918817=.&entry.1398294925=Lainnya&entry.1584127182=" target="_blank" rel="noopener" class="btn">Buka Google Form (prefilled)</a></p>
-                        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfWnTVDWmNnKZI3T8tiqktfyQyDFHyQc2knFzyu2WybM0es3A/viewform?usp=pp_url&entry.1957495963=.&entry.621031545=.&entry.802918817=.&entry.1398294925=Lainnya&entry.1584127182=&embedded=true" width="100%" height="700" frameborder="0" marginheight="0" marginwidth="0">Memuat…</iframe>
-                    </div>
+                    <form id="contactForm" action="https://docs.google.com/forms/u/0/d/e/1FAIpQLSfWnTVDWmNnKZI3T8tiqktfyQyDFHyQc2knFzyu2WybM0es3A/formResponse" method="POST" target="_blank">
+                        <div class="form-group">
+                            <label for="nama">Nama Lengkap *</label>
+                            <input type="text" id="nama" name="entry.1957495963" required placeholder="Masukkan nama lengkap Anda">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email *</label>
+                            <input type="email" id="email" name="entry.621031545" required placeholder="contoh@email.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="telepon">Nomor Telepon *</label>
+                            <input type="tel" id="telepon" name="entry.802918817" required placeholder="+62812... atau 0812...">
+                        </div>
+                        <div class="form-group">
+                            <label for="kategori">Kategori Pertanyaan</label>
+                            <select id="kategori" name="entry.1398294925">
+                                <option value="Informasi Program">Informasi Program</option>
+                                <option value="Persyaratan">Persyaratan</option>
+                                <option value="Jadwal">Jadwal</option>
+                                <option value="Lainnya">Lainnya</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="pesan">Pesan *</label>
+                            <textarea id="pesan" name="entry.1584127182" rows="5" required placeholder="Tuliskan pertanyaan atau pesan Anda di sini..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Kirim Pesan</button>
+                        <p id="formMessage" style="display: none;"></p>
+                    </form>
                 </div>
             </div>
         </div>

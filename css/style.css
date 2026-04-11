@@ -553,6 +553,11 @@ section {
     font-weight: 600;
 }
 
+.form-group label::after {
+    content: ' *';
+    color: #e74c3c;
+}
+
 .form-group input,
 .form-group textarea,
 .form-group select {
@@ -576,6 +581,12 @@ section {
 #contactForm button {
     width: 100%;
     margin-top: 10px;
+    transition: all 0.3s ease;
+}
+
+#contactForm button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(85, 139, 47, 0.3);
 }
 
 #formMessage {
