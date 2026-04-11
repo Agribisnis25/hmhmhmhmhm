@@ -52,7 +52,9 @@ if (contactForm) {
 // Jika ingin menggunakan Formspree, isi ENDPOINT ini, contoh: 'https://formspree.io/f/xxxxxx'
 const FORMSPREE_ENDPOINT = '';
 
-contactForm.addEventListener('submit', (e) => {
+contactForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
     // Get form values
     const nama = document.getElementById('nama').value.trim();
     const email = document.getElementById('email').value.trim();
@@ -63,7 +65,6 @@ contactForm.addEventListener('submit', (e) => {
     // Validation
     if (!nama || !email || !telepon || !pesan) {
         showFormMessage('Mohon isi semua kolom yang diperlukan!', 'error');
-        e.preventDefault();
         return;
     }
 
@@ -71,7 +72,6 @@ contactForm.addEventListener('submit', (e) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
         showFormMessage('Format email tidak valid!', 'error');
-        e.preventDefault();
         return;
     }
 
@@ -79,7 +79,6 @@ contactForm.addEventListener('submit', (e) => {
     const phoneRegex = /^(\+62|0)[0-9]{9,12}$/;
     if (!phoneRegex.test(telepon)) {
         showFormMessage('Format nomor telepon tidak valid! Gunakan format: +62812... atau 0812...', 'error');
-        e.preventDefault();
         return;
     }
 
@@ -89,13 +88,33 @@ contactForm.addEventListener('submit', (e) => {
     btn.textContent = 'Mengirim...';
     btn.disabled = true;
 
-    showFormMessage('Mengirim pesan... Formulir akan dibuka di tab baru.', 'success');
+    try {
+        // Prepare form data
+        const formData = new FormData();
+        formData.append('entry.1957495963', nama);
+        formData.append('entry.621031545', email);
+        formData.append('entry.802918817', telepon);
+        formData.append('entry.1398294925', kategori);
+        formData.append('entry.1584127182', pesan);
 
-    // Re-enable button after a short delay (in case validation fails and form doesn't submit)
-    setTimeout(() => {
+        // Submit to Google Forms
+        const response = await fetch('https://docs.google.com/forms/u/0/d/e/1FAIpQLSfWnTVDWmNnKZI3T8tiqktfyQyDFHyQc2knFzyu2WybM0es3A/formResponse', {
+            method: 'POST',
+            body: formData,
+            mode: 'no-cors' // Required for Google Forms
+        });
+
+        // Since no-cors doesn't allow reading response, assume success
+        showFormMessage('Pesan Anda telah berhasil dikirim! Terima kasih atas pertanyaan Anda.', 'success');
+        contactForm.reset();
+
+    } catch (error) {
+        console.error('Error submitting form:', error);
+        showFormMessage('Terjadi kesalahan saat mengirim. Silakan coba lagi nanti.', 'error');
+    } finally {
         btn.textContent = originalText;
         btn.disabled = false;
-    }, 3000);
+    }
 });
 } // end if(contactForm)
 
